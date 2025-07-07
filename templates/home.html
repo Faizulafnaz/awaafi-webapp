@@ -1,0 +1,470 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home | Awaafi{% endblock %}
+
+{% block css %}<link rel="stylesheet" href="{% static 'css/style.css' %}">{% endblock %}
+
+{% block search_bar %}
+<div class="container-fluid d-none d-lg-block">
+    <div class="row justify-content-end">
+        <div class="col-md-6 col-sm-12 col-lg-5">
+        <form class="search-form" role="search">
+            <div class="position-relative">
+            <input type="search" class="form-control search-input" placeholder="Search your favourite food"
+                aria-label="Search">
+            <span class="search-icon">
+                <span class="separator"></span>
+                <i class="bi bi-search"></i>
+            </span>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block hero_content %}
+<div
+    class="container d-flex flex-column justify-content-center align-items-center flex-grow-1 text-center hero-content"
+    data-aos="fade-down" data-aos-duration="1200">
+    <h6 class="hero-title">The Best Kerala Restaurant in the heart of <span class="heading-highlight"> Edinburgh
+    </span></h6>
+    <img class="hero-logo img-fluid" src="{% static 'img/Group.png' %}" alt="Hero Logo" class="mt-3">
+</div>
+<div class="hero-buttons d-flex flex-column flex-md-row rounded-top-start" data-aos="fade-up" data-aos-delay="200">
+    <a href="https://edinburgh.awaafi.co.uk/Menu" class="btn btn-primary btn-hero" role="button">Order Now</a>
+    <a href="https://www.google.com/maps/reserve/v/dine/c/pNL_zZxUSP4?source=pa&opi=89978449&hl=en-GB&gei=a1tcZ9WhO5y1hbIPoODOwAQ&sourceurl=https%3A%2F%2Fwww.google.com%2Fsearch%3Fgs_ssp%3DeJwFwUEKgCAQAEC6Bv2gg5fOuaYpPaFfrNtaSySURD6_mbYb9xHgvOsFBxXdLIOuNgRPHiI5dGw5LrqCmROnCYKfrbOTWXv8EJMoyZtgVvhgFFL0SpHMPxIoGeg%26q%3Dawaafi%2Bindian%2Barabic%2Bcuisine%26rlz%3D1C1RLNS_enGB997GB997%26oq%3Dawaaafi%2B%26gs_lcrp%3DEgZjaHJvbWUqDwgCEC4YDRivARjHARiABDIGCAAQRRg5MgYIARBFGEAyDwgCEC4YDRivARjHARiABDIJCAMQABgNGIAEMgkIBBAAGA0YgAQyCQgFEAAYDRiABDIICAYQABgNGB4yCAgHEAAYDRge0gEIMzA0NGowajeoAgiwAgE%26sourceid%3Dchrome%26ie%3DUTF-8&ihs=1"
+    class="btn btn-outline-light btn-hero" role="button">Booking</a>
+
+</div>
+<div class="hero-text-right position-absolute">
+    <h4 class="m-0">Feed your soul</h4>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Our Story Section -->
+<section class="container my-5 story-wrapper">
+  <div class="row align-items-center story">
+
+    <div class="col-md-4 text-md-end text-center mb-3 mb-md-0">
+      <img class="story-logo" src="{% static 'img/ourstory.png' %}" data-aos="zoom-in" data-aos-duration="1000" />
+    </div>
+
+    <div class="col-md-1 d-none d-md-flex justify-content-center">
+      <div class="story-separator" data-aos="fade-down" data-aos-delay="200"></div>
+    </div>
+
+    <div class="col-md-7 text-center text-md-start">
+      <p class="mb-3 story-text" data-aos="fade-left" data-aos-delay="400">
+        Welcome to Awaafi Restaurant - Your Gateway to Exquisite Indian and Arabic Flavours!
+        Located in the heart of Edinburgh, we bring authentic tastes of Kerala and the Middle East.
+      </p>
+      <a href="#" class="btn btn-primary btn-story" data-aos="zoom-in" data-aos-delay="600">More</a>
+    </div>
+  </div>
+</section>
+
+<!-- Our Vision Section -->
+<section class="vision-section py-5" data-aos="fade-up" data-aos-duration="200">
+  <div class="container d-flex justify-content-center align-items-center">
+    <div class="vision-box p-4 p-md-5 text-center text-md-start" data-aos="zoom-in" data-aos-delay="300">
+      <h2 class="mb-2 d-flex align-items-center justify-content-center vision-heading" data-aos="fade-right" data-aos-delay="400">
+        Our<img class="vision-logo img-fluid" src="{% static 'img/Vector.png' %}" alt="Logo"> Vision
+      </h2>
+      <p class="vision-text" data-aos="fade-left" data-aos-delay="400">
+        At Awaafi, our vision is to blend the authentic tastes of Kerala and the Middle East
+        into a culinary experience that brings people together. We honor tradition while embracing
+        innovation, serving meals that are rich in culture, flavor, and love.
+        At Awaafi, our vision is to blend the authentic tastes of Kerala and the Middle East
+        into a culinary experience that brings people together. We honor tradition while embracing
+        innovation, serving meals that are rich in culture, flavor, and love.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Menu -->
+<section class="long-section text-white py-5" data-aos="fade-up" data-aos-duration="1000">
+  <div class="container-fluid position-relative">
+    <div class="vertical-left-text position-absolute">
+      <h4 class="m-0">Feed your soul</h4>
+    </div>
+    <div class="text-center mb-5" data-aos="fade-up">
+      <video class="img-fluid rounded-4 awaafi-image" autoplay muted loop playsinline>
+        <source src="{% static 'img/awaafi-video.mp4' %}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <div class="row align-items-center text-dark mb-5 p-4 rounded">
+      <div class="col-md-5 text-md-end text-center mb-3 mb-md-0">
+        <img class="story-logo" src="{% static 'img/Group-55.png' %}" data-aos="zoom-in" data-aos-delay="300" />
+      </div>
+      <div class="col-md-1 d-none d-md-flex justify-content-center" data-aos="fade-down" data-aos-delay="200">
+        <div class="story-separator"></div>
+      </div>
+      <div class="col-md-6 text-center text-md-start menu-text-box" data-aos="fade-left" data-aos-delay="400">
+        <p class="mb-3 ">
+          Discover the story of how our chefs blend traditional Kerala flavors with bold Arabic techniques to create
+          something truly unforgettable.
+        </p>
+      </div>
+    </div>
+
+    <div class="row mb-5 justify-content-center d-flex">
+      <div class="col-md-5 mb-4">
+        <div class="card h-100 text-dark" data-aos="fade-right" data-aos-delay="200">
+          <img src="{% static 'img/image 12.jpg' %}" class="card-img-top image-fluid rounder-4" alt="Biryani">
+          <div class="card-body text-center">
+            <h3 class="card-title">MALABAR BIRIYANI</h3>
+            <p class="card-text" style="padding: 10px;">At Awaafi Restaurant , we bring you a taste of Kerala’s
+              grandest culinary celebration —the legendary Malabar Wedding Biryani . In the coastal kitchens of
+              Malabar, biryani isn’t just food—it’s an art form . Our chefs have crafted this masterpiece by cooking
+              it in a layered handi (clay pot) and slow-steamed (Dum style) for rich, aromatic perfection with the
+              touch of mappila wedding feast. </p>
+            <a href="https://edinburgh.awaafi.co.uk/Menu" class="btn btn-primary">Order Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-5 mb-4">
+        <div class="card h-100 text-dark" data-aos="fade-left" data-aos-delay="400">
+          <img src="{% static 'img/image 12.png' %}" class="card-img-top image-fluid rounder-4" alt="Mandi">
+          <div class="card-body text-center">
+            <h3 class="card-title">ARABIC MANDI</h3>
+            <p class="card-text p-3">At Awaafi, we serve Mandi with a story—a delicious fusion born when Keralites in
+              the GCC blended Yemeni traditions with our spices. Returning home, they perfected it: slow-cooked
+              Arabic-style meat meets bold Malabar masalas , creating the iconic Kerala Mandi you crave today.
+              One dish, two cultures, endless flavor.</p>
+            <a href="https://edinburgh.awaafi.co.uk/Menu" class="btn btn-primary mt-3">Order Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-5 mb-4 d-lg-none">
+        <div class="card h-100 text-dark" data-aos="fade-up" data-aos-delay="200">
+          <img src="{% static 'img/image 13.png' %}" class="card-img-top image-fluid rounder-4" alt="Biryani">
+          <div class="card-body text-center">
+            <h3 class="card-title">CHAI FOR THE SOUL</h3>
+            <p class="card-text" style="padding: 10px;">At Awaafi, we pour Kerala’s heartbeat into every cup—spiced,
+              strong, and soul-stirring. This isn’t just tea; it’s a cup of nostalgia, cardamom-spiced memories, and
+              the warmth of a thousand street-side stories, brewed fresh in Edinburgh.
+              Feed your soul with the chai that fuels Kerala’s dawns and dusk</p>
+            <a href="https://edinburgh.awaafi.co.uk/Menu" class="btn btn-primary">Order Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-5 mb-4 d-lg-none">
+        <div class="card h-100 text-dark" data-aos="fade-down" data-aos-delay="400">
+          <img src="{% static 'img/Screenshot 2025-05-03 at 7.13.16 AM 1.jpg' %}" class="card-img-top image-fluid rounder-4"
+            alt="Mandi">
+          <div class="card-body text-center">
+            <h3 class="card-title">ALFAHM</h3>
+            <p class="card-text p-3">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+              euismod tincidunt ut laoreet dolore
+              magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper
+              suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum</p>
+            <a href="https://edinburgh.awaafi.co.uk/Menu" class="btn btn-primary mt-3">Order Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-wrapper">
+      <div class="row align-items-center mb-5 col-10 h-card" data-aos="fade-right" data-aos-delay="200">
+        <div class="col-md-6 chai-text">
+          <h3 class="card-title">CHAI FOR THE SOUL</h3>
+          <p>At Awaafi, we pour Kerala’s heartbeat into every cup—spiced, strong, and soul-stirring. This isn’t just
+            tea; it’s a cup of nostalgia, cardamom-spiced memories, and the warmth of a thousand street-side stories,
+            brewed fresh in Edinburgh.
+            Feed your soul with the chai that fuels Kerala’s dawns and dusk</p>
+          <a href="https://edinburgh.awaafi.co.uk/Menu" class="btn btn-primary mt-3">Order Now</a>
+        </div>
+        <div class="col-md-6 text-center p-0">
+          <img src="{% static 'img/image 13.png' %}" class="w-100 h-100 object-fit-cover rounded-4" alt="Chai">
+        </div>
+      </div>
+
+      <div class="row align-items-center mb-3 col-10 h-card" data-aos="fade-left" data-aos-delay="300">
+        <div class="col-md-6 text-center p-0">
+          <img src="{% static 'img/Screenshot 2025-05-03 at 7.13.16 AM 1.jpg' %}" class="img-fluid rounded-4 object-fit-cover"
+            alt="Shawaya">
+        </div>
+        <div class="col-md-6 p-4">
+          <h3 class="card-title">ALFAHM</h3>
+          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut
+            laoreet dolore
+            magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit
+            lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum</p>
+          <a href="https://edinburgh.awaafi.co.uk/Menu" class="btn btn-primary mt-3 ">Order Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section with image background -->
+<section class="image-carousel-section d-flex align-items-center py-5">
+  <div class="container-fluid px-4">
+    <div class="row align-items-center justify-content-center">
+
+      <div class="col-lg-4 col-md-5 mb-4 mb-md-0">
+        <div class="glass-card p-4 rounded catering-card">
+          <img src="{% static 'img/CATERING-LOGO.png' %}" alt="Logo" class="mb-3 catering-logo" data-aos="fade-left"
+            data-aos-delay="200">
+          <h2 class="mb-3 catering-heading text-center" data-aos="zoom-in" data-aos-delay="400">CATERING ORDERS</h2>
+          <p class="catering-text" data-aos="fade-right" data-aos-delay="500">Lorem ipsum dolor sit amet, consectetuer
+            adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut
+            wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea
+            commodo consequat. Duis autem vel eum</p>
+          <a href="https://edinburgh.awaafi.co.uk/Menu" class="btn btn-primary mt-3 position-relative"
+            data-aos="fade-left" data-aos-delay="200">Order Now</a>
+        </div>
+      </div>
+
+      <div class="col-md-7 col-lg-8 position-relative overflow-hidden r-0">
+        <div id="photoScroll" class="d-flex gap-3 overflow-auto image-strip pe-5" data-aos="zoom-in"
+          data-aos-delay="500">
+          <video class="img-fluid scroll-img" autoplay muted loop playsinline>
+            <source src="{% static 'img/catering-v1.mp4' %}" type="video/mp4">
+          </video>
+          <video class="img-fluid scroll-img" autoplay muted loop playsinline>
+            <source src="{% static 'img/catering-v2.mp4' %}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <img src="{% static 'img/catering-1.jpg' %}" class="scroll-img" alt="Customer 2">
+          <img src="{% static 'img/catering-2.jpg' %}" class="scroll-img" alt="Customer 4">
+        </div>
+
+        <button onclick="scrollCateringGallery(-300)" class="gallery-arrow left-arrow btn btn-dark">
+          ‹
+        </button>
+        <button onclick="scrollCateringGallery(300)" class="gallery-arrow right-arrow btn btn-dark">
+          ›
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% load static %}
+<!-- Gallery Section -->
+<section class="gallery-section py-5">
+  <div class="container-fluid px-0 position-relative text-center">
+    <h3 class="gallery-heading fw-bolder fs-1 mb-2 p-4">OUR GALLERY</h3>
+
+    <!-- Scrollable container -->
+    <div id="galleryScroll" class="d-flex gap-3 gallery-wrapper">
+
+      <!-- Portrait -->
+      <a href="{% static 'img/IMG-20250515-WA0016.jpg' %}" data-lightbox="gallery">
+        <img src="{% static 'img/IMG-20250515-WA0016.jpg' %}" class="gallery-img portrait" alt="Portrait 1" data-aos="zoom-in" data-aos-delay="200">
+      </a>
+
+      <!-- 2 Squares -->
+      <div class="d-flex flex-column gap-3">
+        <a href="{% static 'img/IMG-20250515-WA0012.jpg' %}" data-lightbox="gallery">
+          <img src="{% static 'img/IMG-20250515-WA0012.jpg' %}" class="gallery-img square" alt="Square 1" data-aos="zoom-in" data-aos-delay="200">
+        </a>
+        <a href="{% static 'img/IMG-20250515-WA0018.jpg' %}" data-lightbox="gallery">
+          <img src="{% static 'img/IMG-20250515-WA0018.jpg' %}" class="gallery-img square" alt="Square 2" data-aos="zoom-in" data-aos-delay="200">
+        </a>
+      </div>
+
+      <!-- 2 Squares -->
+      <div class="d-flex flex-column gap-3">
+        <a href="{% static 'img/IMG-20250515-WA0021.jpg' %}" data-lightbox="gallery">
+          <img src="{% static 'img/IMG-20250515-WA0021.jpg' %}" class="gallery-img square" alt="Square 3" data-aos="zoom-in" data-aos-delay="100">
+        </a>
+        <a href="{% static 'img/IMG-20250515-WA0013.jpg' %}" data-lightbox="gallery">
+          <img src="{% static 'img/IMG-20250515-WA0013.jpg' %}" class="gallery-img square" alt="Square 4" data-aos="zoom-in" data-aos-delay="100">
+        </a>
+      </div>
+
+      <!-- More Portraits -->
+      <a href="{% static 'img/IMG-20250515-WA0015.jpg' %}" data-lightbox="gallery">
+        <img src="{% static 'img/IMG-20250515-WA0015.jpg' %}" class="gallery-img portrait" alt="Portrait 2" data-aos="zoom-in" data-aos-delay="200">
+      </a>
+      <a href="{% static 'img/IMG-20250515-WA0022.jpg' %}" data-lightbox="gallery">
+        <img src="{% static 'img/IMG-20250515-WA0022.jpg' %}" class="gallery-img portrait" alt="Portrait 3" data-aos="zoom-in" data-aos-delay="200">
+      </a>
+      <a href="{% static 'img/IMG-20250515-WA0025.jpg' %}" data-lightbox="gallery">
+        <img src="{% static 'img/IMG-20250515-WA0025.jpg' %}" class="gallery-img portrait" alt="Portrait 4" data-aos="zoom-in" data-aos-delay="200">
+      </a>
+
+      <div class="d-flex flex-column gap-3">
+        <a href="{% static 'img/IMG-20250515-WA0010.jpg' %}" data-lightbox="gallery">
+          <img src="{% static 'img/IMG-20250515-WA0010.jpg' %}" class="gallery-img square" alt="Square 3" data-aos="zoom-in" data-aos-delay="100">
+        </a>
+        <a href="{% static 'img/IMG-20250515-WA0009.jpg' %}" data-lightbox="gallery">
+          <img src="{% static 'img/IMG-20250515-WA0009.jpg' %}" class="gallery-img square" alt="Square 4" data-aos="zoom-in" data-aos-delay="100">
+        </a>
+      </div>
+
+      <a href="{% static 'img/IMG-20250515-WA0021.jpg' %}" data-lightbox="gallery">
+        <img src="{% static 'img/IMG-20250515-WA0021.jpg' %}" class="gallery-img portrait" alt="Portrait 3" data-aos="zoom-in" data-aos-delay="200">
+      </a>
+      <a href="{% static 'img/IMG-20250515-WA0024.jpg' %}" data-lightbox="gallery">
+        <img src="{% static 'img/IMG-20250515-WA0024.jpg' %}" class="gallery-img portrait" alt="Portrait 4" data-aos="zoom-in" data-aos-delay="200">
+      </a>
+
+      <div class="d-flex flex-column gap-3">
+        <a href="{% static 'img/IMG-20250515-WA0020.jpg' %}" data-lightbox="gallery">
+          <img src="{% static 'img/IMG-20250515-WA0020.jpg' %}" class="gallery-img square" alt="Square 3" data-aos="zoom-in" data-aos-delay="100">
+        </a>
+        <a href="{% static 'img/IMG-20250515-WA0019.jpg' %}" data-lightbox="gallery">
+          <img src="{% static 'img/IMG-20250515-WA0019.jpg' %}" class="gallery-img square" alt="Square 4" data-aos="zoom-in" data-aos-delay="100">
+        </a>
+      </div>
+
+      <div class="d-flex flex-column gap-3">
+        <a href="{% static 'img/IMG-20250515-WA0017.jpg' %}" data-lightbox="gallery">
+          <img src="{% static 'img/IMG-20250515-WA0017.jpg' %}" class="gallery-img square" alt="Square 3" data-aos="zoom-in" data-aos-delay="100">
+        </a>
+        <a href="{% static 'img/IMG-20250515-WA0011.jpg' %}" data-lightbox="gallery">
+          <img src="{% static 'img/IMG-20250515-WA0011.jpg' %}" class="gallery-img square" alt="Square 4" data-aos="zoom-in" data-aos-delay="100">
+        </a>
+      </div>
+
+      <a href="{% static 'img/IMG-20250515-WA0010.jpg' %}" data-lightbox="gallery">
+        <img src="{% static 'img/IMG-20250515-WA0010.jpg' %}" class="gallery-img portrait" alt="Portrait 4" data-aos="zoom-in" data-aos-delay="200">
+      </a>
+    </div>
+
+    <!-- Arrows -->
+    <button onclick="scrollGallery(-300)" class="gallery-arrow left-arrow btn btn-dark">
+      ‹
+    </button>
+    <button onclick="scrollGallery(300)" class="gallery-arrow right-arrow btn btn-dark">
+      ›
+    </button>
+
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section py-5">
+    <div class="container-fluid px-5 position-relative ">
+        <!-- Section heading -->
+        <div class="row mb-4">
+        <div class="col-12" data-aos="fade-up">
+            <h6 class="review-heading">OUR CUSTOMERS</h6>
+            <h2 class="fw-bold">Here’s what our satisfied <br>
+            customers are saying</h2>
+        </div>
+        </div>
+        <div class="row align-items-start" data-aos="fade-up">
+        <script defer async src='https://cdn.trustindex.io/loader.js?eee62df4600055600206e88b77e'></script>
+        </div>
+    </div>
+</section>
+
+<!-- Map Section -->
+<section class="map-section" data-aos="fade-up" data-aos-duration="1000">
+  <div class="container">
+    <div class="position-relative rounded-4 shadow d-flex flex-column flex-md-row align-items-center">
+
+      <!-- Pin Icon Animation -->
+      <div class="map-icon text-center position-absolute translate-middle bg-transparent" data-aos="zoom-in" data-aos-delay="100">
+        <img src="{% static 'img/red-pin-with-large-letter-o-it 1.png' %}" alt="Map Pin" width="150" height="230">
+      </div>
+
+      <!-- Left Box -->
+      <div class="col-md-6 text-center col-sm-6 text-md-start rounded-4 map-left-box" data-aos="fade-right" data-aos-delay="200">
+        <h2 class="fw-bolder fs-1">We Are <br><strong>Here</strong></h2>
+        <p>108a-110a Gorgie Road, Edinburgh</p>
+        <a href="https://maps.google.com/maps?ll=55.938397,-3.230543&z=22&t=m&hl=en&gl=US&mapclient=embed&cid=1328543411101520946"
+          target="_blank" class="btn btn-light mt-2 img-fluid">
+          View in Large Map
+        </a>
+      </div>
+
+      <!-- Map -->
+      <div class="col-md-6 col-sm-6 p-0 m-0 map-box" data-aos="fade-left" data-aos-delay="300">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2244.052646931837!2d-3.232717584140301!3d55.93838518060501!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4887c70eeaa86929%3A0x126278637fc9ee82!2s110a%20Gorgie%20Rd%2C%20Edinburgh%20EH11%202NP!5e0!3m2!1sen!2suk!4v1683700281245!5m2!1sen!2suk"
+          width="100%" height="100%" style="border:0; border-radius: 10px;" allowfullscreen="" loading="lazy">
+        </iframe>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Callout Section with Scooter -->
+<section class="callout-section py-4 mt-4">
+  <div class="container-fluid d-flex align-items-center justify-content-end callout p-0">
+
+    <div class="scooter-img flex-shrink-0">
+      <img src="{% static 'img/hamburger-delivery-3d-rendering 2.png' %}" alt="Scooter" class="img-fluid"
+        data-aos="fade-right" data-aos-delay="300">
+    </div>
+
+    <div class="flex-grow-1 px-4 py-3 d-flex justify-content-around align-items-center flex-wrap callout-box">
+      <p class="mb-2 mb-md-0 fw-semibold" data-aos="fade-left" data-aos-delay="200">
+        Order online and get your food delivered to <br>your doorstep. Click to view our full menu!
+      </p>
+      <a href="#" class="btn btn-light" data-aos="zoom-in" data-aos-delay="600">View Menu</a>
+    </div>
+
+  </div>
+</section>
+
+
+{% endblock %}
+
+{% block scripts %}
+ <script>
+    function scrollCateringGallery(offset) {
+      const gallery = document.getElementById('photoScroll');
+      gallery.scrollLeft += offset;
+    }
+  </script>
+  <script>
+    function scrollTestimonials(direction) {
+      const container = document.getElementById('testimonialContainer');
+      const scrollAmount = 100;
+      container.scrollTop += direction * scrollAmount;
+    }
+  </script>
+  <script>
+    const gallery = document.getElementById("galleryScroll");
+
+    let scrollAmount = 0;
+    const scrollStep = 300;
+    const scrollDelay = 3000;
+
+    // Declare the interval reference so it can be cleared later
+    let autoScroll = setInterval(autoScrollGallery, scrollDelay);
+
+    function autoScrollGallery() {
+      if (!gallery) return;
+
+      scrollAmount += scrollStep;
+
+      if (scrollAmount >= gallery.scrollWidth - gallery.clientWidth) {
+        scrollAmount = 0;
+      }
+
+      gallery.scrollTo({
+        left: scrollAmount,
+        behavior: "smooth"
+      });
+    }
+
+    // Pause on hover (desktop only)
+    if (window.innerWidth > 768) {
+      gallery.addEventListener('mouseenter', () => clearInterval(autoScroll));
+      gallery.addEventListener('mouseleave', () => {
+        autoScroll = setInterval(autoScrollGallery, scrollDelay);
+      });
+    }
+  </script>
+
+{% endblock %}
+
+
+

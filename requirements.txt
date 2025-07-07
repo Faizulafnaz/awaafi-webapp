@@ -1,0 +1,13 @@
+Django==5.2.3
+django-allauth==0.65.9
+django-simple-history==3.10.1
+django-unfold==0.62.0
+django-jet==1.0.8
+stripe==12.2.0
+Pillow==11.2.1
+python-decouple==3.8
+requests==2.32.4
+gunicorn==23.0.0
+whitenoise==6.8.0
+psycopg2-binary==2.9.12
+dj-database-url==2.1.0

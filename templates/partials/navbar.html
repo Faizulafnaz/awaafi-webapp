@@ -1,0 +1,49 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg bg-transparent">
+  <div class="container-fluid">
+    <a class="navbar-brand p-3" href="#">
+      <img class="logo img-fluid" src="{% static 'img/logo.png' %}" alt="Logo" height="40">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+      data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <form class="d-block d-lg-none mt-3 w-100 position-relative" role="search" style="margin-bottom: 23px;">
+        <input type="search" class="form-control search-input" placeholder="Search your favourite food" aria-label="Search">
+        <span class="search-icon">
+          <span class="separator"></span>
+          <i class="bi bi-search"></i>
+        </span>
+      </form>
+      <ul class="navbar-nav ms-auto nav-link-wrapper">
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">HOME</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'menu' %}">MENU</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'contact_us' %}">GET IN TOUCH</a></li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'my_orders' %}">BOOKING</a>
+        </li>
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'cart_detail' %}">
+              <i class="bi bi-basket"></i> BASKET
+            </a>
+          </li>
+          <li class="nav-item">
+            <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="nav-link btn btn-link text-decoration-none" style="background: none; border: none;">
+                LOGOUT
+              </button>
+            </form>
+          </li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">LOGIN</a></li>
+        {% endif %}
+
+      </ul>
+    </div>
+  </div>
+</nav>

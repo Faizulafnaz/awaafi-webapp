@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load socialaccount %}
+
+{% block title %}Login{% endblock %}
+
+{% block css %}<link rel="stylesheet" href="{% static 'css/loginStyle.css' %}">{% endblock %}
+
+{% block hero_content %}
+<!-- ----------  Login card  ---------- -->
+<div class="container">
+  <div class="row justify-content-end">
+    <div class="col-md-6 col-lg-5">
+      <div class="p-4 p-md-5 bg-white shadow rounded-4" style="margin-top:30px;">
+        <!--  Title  -->
+        <div class="text-center">
+          <h3 class="fw-bold text-dark">Welcome back</h3>
+          <p class="text-muted small">Log in your account</p>
+        </div>
+
+        <!--  Form  -->
+        <form method="POST" action="{% url 'login' %}">
+          {% csrf_token %}
+          <div class="">
+            <label for="email" class="form-label small">Email</label>
+            <input id="email" name="email" type="text" class="form-control custom-input"
+              placeholder="Enter your email">
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label small d-flex justify-content-between">
+              <span>Password</span>
+            </label>
+            <input id="password" name="password" type="password" class="form-control custom-input"
+              placeholder="Enter password">
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="form-check mb-0">
+              <input id="rememberMe" name="remember" class="form-check-input" type="checkbox">
+              <label class="form-check-label text-black small" for="rememberMe">Remember me</label>
+            </div>
+            <a href="{% url 'account_reset_password' %}" class="text-decoration-none small text-black">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="btn btn-warning w-100 fw-semibold">LOG IN</button>
+
+          <div class="text-center my-3 text-muted small">or continue with</div>
+
+          <a href="{% provider_login_url 'google' %}" class="btn btn-outline-dark w-100 d-flex align-items-center justify-content-center gap-2">
+            <img src="{% static 'img/google-img.png' %}" alt="Google Icon" style="height:20px;width:20px;">
+            Continue with Google
+          </a>
+
+          <p class="mt-4 text-center text-muted small">
+            Don't have an account?
+            <a href="{% url 'register' %}" class="fw-bold text-decoration-none text-black small">Sign up here</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ----------  End login card  ---------- -->
+{% endblock %}
+

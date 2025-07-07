@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Orders - Awaafi{% endblock %}
+
+{% block css %}
+<link href="{% static 'css/ordersStyles.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block hero_content %}
+<div class="container my-5" style="padding-bottom: 100px;">
+  <div class="text-center mb-4">
+    <h5 class="my-orders-title">My Orders</h5>
+  </div>
+  <div class="row g-4">
+    <div class="col-12 col-lg-10 mx-auto">
+      {% if orders %}
+        {% for order in orders %}
+        <div class="basket-section-order text-white p-4 rounded mb-3 position-relative">
+          <!-- Food Item Summary -->
+          <div class="d-flex align-items-center justify-content-between flex-wrap">
+            <!-- Image (first item image or placeholder) -->
+            {% for item in order.items.all %}
+              {% if forloop.first %}
+                {% if item.product and item.product.image %}
+                  <img src="{{ item.product.image.url }}" alt="Food Item"
+                    style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+                {% else %}
+                  <img src="{% static 'img/default-food.jpg' %}" alt="Food Item"
+                    style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+            <!-- Food Details -->
+            <div class="ms-3 flex-grow-1">
+              <p class="mb-2 fw-bold fs-6">
+                {% for item in order.items.all %}
+                  {{ item.product }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+              </p>
+              <div class="price-summary d-flex flex-wrap gap-4">
+                <div class="detail-box">Total: £{{ order.total|floatformat:2 }}</div>
+                <div class="detail-box">Status: {{ order.status|title }}</div>
+                <div class="detail-box">Date: {{ order.created_at|date:'d M Y H:i' }}</div>
+              </div>
+            </div>
+          </div>
+          <!-- Hidden Details -->
+          <div class="order-details mt-4" style="display: none;">
+            <hr class="border-secondary">
+            <p class="small fw-bold mb-1">Delivery Address</p>
+            <p class="small mb-3">
+              {{ order.address.name }}<br>
+              {{ order.address.house }}, {{ order.address.street }}, {{ order.address.city }}<br>
+              PIN: {{ order.address.pin_code }}<br>
+              <small>{{ order.address.phone }}</small>
+            </p>
+            <!-- Timeline (customize as needed) -->
+            <div class="order-timeline">
+              <div class="timeline-step {% if order.status in 'paid,preparing,on_route,delivered' %}active{% endif %}">Order Received</div>
+              <div class="timeline-step {% if order.status in 'preparing,on_route,delivered' %}active{% endif %}">Preparing</div>
+              <div class="timeline-step {% if order.status in 'on_route,delivered' %}active{% endif %}">On Route</div>
+              <div class="timeline-step {% if order.status == 'delivered' %}active{% endif %}">Delivered</div>
+              {% if order.status == 'cancelled' %}
+                <div class="timeline-step cancelled">Cancelled</div>
+              {% endif %}
+            </div>
+            <hr>
+            <p class="small fw-bold mb-1">Order Items</p>
+            <ul>
+              {% for item in order.items.all %}
+                <li>
+                  {% if item.product and item.product.image %}
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
+                  {% else %}
+                    <img src="{% static 'img/default-food.jpg' %}" alt="No image" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
+                  {% endif %}
+                  {{ item.product.name }} ({{ item.variant }}) x{{ item.quantity }} — £{{ item.price|floatformat:2 }}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <!-- Toggle Button -->
+          <div class="toggle-container mt-3 d-flex justify-content-end">
+            <button class="arrow-button" onclick="toggleMore(this)">v</button>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="text-center text-muted py-5">
+          <i class="bi bi-basket" style="font-size: 3rem;"></i>
+          <p>No orders found.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function toggleMore(button) {
+    const orderDetails = button.closest('.basket-section-order').querySelector('.order-details');
+    const isVisible = orderDetails.style.display === 'block';
+    orderDetails.style.display = isVisible ? 'none' : 'block';
+    button.textContent = isVisible ? 'v' : '^';
+  }
+</script>
+{% endblock %}

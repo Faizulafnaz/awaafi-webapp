@@ -1,0 +1,17 @@
+db.sqlite3
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pywz
+*.pyzw
+*.pyzwz
+.env
+ROLE_SETUP_GUIDE.md
+AUDIT_LOGGING_SETUP.md
+venv/
+staticfiles/
+media/
+.env

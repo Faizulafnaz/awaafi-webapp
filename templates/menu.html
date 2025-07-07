@@ -1,0 +1,1235 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Menu{% endblock %}
+{% block css %}<link
+  rel="stylesheet"
+  href="{% static 'css/menuStyle.css' %}"
+/>{% endblock %} {% block hero_content %}
+<!-- ---------- Hero Content ---------- -->
+<div class="hero-content text-white">
+  <h1 class="display-5 fw-bold">
+    A JOURNEY <br />
+    THROUGH <span class="text-warning">INDIAN</span><br />
+    <span class="text-warning">ARABIC CUISINE</span>
+  </h1>
+  <p class="lead my-3 hero-description">
+    Welcome to Awaafi Restaurant – Your Gateway to Exquisite Indian and <br />
+    Arabic Flavours. Located at 110a Gorgie Road, EH11 2NP, Awaafi Restaurant is
+    <br />
+    a culinary treasure trove that transports you to the vibrant culinary <br />
+    landscapes of India and the Middle East.
+  </p>
+
+  <!-- Desktop Search -->
+  <div class="container-fluid d-none d-lg-block">
+    <div class="row justify-content-end">
+      <div class="col-md-6 col-sm-12 col-lg-5">
+        <form class="search-form" role="search" method="get" action="">
+          <div class="position-relative">
+            <input
+              type="search"
+              name="q"
+              class="form-control search-input"
+              placeholder="Search your favourite food"
+              value="{{ search_query|default:'' }}"
+            />
+            <span class="search-icon"><i class="bi bi-search"></i></span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock hero_content %} {% block content %}
+
+<!-- =============== Menu Section Start =============== -->
+<!-- Login Status Indicator -->
+{% if not user.is_authenticated %}
+<div class="container-fluid py-2" style="background-color: rgba(255, 193, 7, 0.1); border-bottom: 1px solid rgba(255, 193, 7, 0.3);">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <small class="text-warning">
+          <i class="bi bi-info-circle"></i> 
+          Please <a href="/accounts/login/" class="text-warning fw-bold">login</a> to add items to your cart
+        </small>
+      </div>
+      <div class="col-md-4 text-end">
+        <a href="/accounts/login/" class="btn btn-sm btn-warning">Login</a>
+        <a href="/accounts/register/" class="btn btn-sm btn-outline-warning ms-2">Register</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- scrolling if needed -->
+<div class="menu-section container-fluid py-4 px-3 text-center">
+  <p class="menu-title text-warning fw-bold display-6 mb-4 text-white">
+    OUR MENU
+  </p>
+
+  <div class="container py-4">
+    <div class="scrolling-wrapper">
+      <div class="scroll-item">
+        <a href="#menu1" class="text-white text-decoration-none"
+          >Appetisers & Sides</a
+        >
+      </div>
+      <div class="scroll-item">
+        <a href="#menu2" class="text-white text-decoration-none"
+          >Starters & Pakoras</a
+        >
+      </div>
+      <div class="scroll-item">
+        <a href="#menu3" class="text-white text-decoration-none"
+          >Vegetable Dishes</a
+        >
+      </div>
+      <div class="scroll-item">
+        <a href="#menu4" class="text-white text-decoration-none"
+          >Indian Traditional Dishes</a
+        >
+      </div>
+      <div class="scroll-item">
+        <a href="#menu5" class="text-white text-decoration-none"
+          >South indian dishes</a
+        >
+      </div>
+      <div class="scroll-item">
+        <a href="#menu6" class="text-white text-decoration-none"
+          >Awaafi Combos</a
+        >
+      </div>
+      <div class="scroll-item">
+        <a href="#menu7" class="text-white text-decoration-none"
+          >Rice & Breads</a
+        >
+      </div>
+      <div class="scroll-item">
+        <a href="#menu8" class="text-white text-decoration-none"
+          >Awaafi Grills</a
+        >
+      </div>
+      <!-- Add more if needed -->
+    </div>
+  </div>
+</div>
+
+<!-- =============== Menu Section End =============== -->
+
+{% if search_results is not None %}
+  <div class="container py-5">
+    <h3 class="text-warning mb-4">Search Results{% if search_query %} for "{{ search_query }}"{% endif %}</h3>
+    <div class="row">
+      {% if search_results %}
+        {% for product in search_results %}
+          <div class="col-lg-4 col-md-6 mb-4 cardone">
+            <div class="custom-card d-flex align-items-center p-3 rounded shadow">
+              <div class="card-text-section flex-grow-1 pe-3">
+                <h5 class="fw-bold mb-2 text-black">{{ product.name }}</h5>
+                <p class="mb-2 text-muted small">{{ product.description }}</p>
+                {% if product.variants.count > 0 %}
+                  {% for variant in product.variants.all %}
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                      <span class="small text-dark">{{ variant.name }}</span>
+                      <div class="d-flex align-items-center gap-2">
+                        <span class="fw-bold text-black">£{{ variant.price }}</span>
+                        <button class="btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center add-to-cart"
+                                data-variant-id="{{ variant.id }}"
+                                style="width: 26px; height: 26px;">
+                          <i class="bi bi-plus text-white"></i>
+                        </button>
+                      </div>
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  <div class="text-muted">Not available</div>
+                {% endif %}
+              </div>
+              <div class="card-image-section position-relative">
+                {% if product.image %}
+                  <img src="{{ product.image.url }}" class="rounded image-fixed-size" alt="{{ product.name }}">
+                {% else %}
+                  <img src="{% static 'img/default-food.jpg' %}" class="rounded image-fixed-size" alt="No image">
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-12">
+          <p class="text-white text-center">No products found matching your search.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% else %}
+
+{% if categorized_products.Appetizers_and_Sides %}
+<!-- =============== menu card one Appetisers & Sides Section start =============== -->
+<div
+  id="menu1"
+  class="menu-card-one appetisers-sides-section container-fluid py-5"
+>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-start mb-4 section-one-title-wrapper">
+        <h2 class="section-one-title">Appetisers & Sides</h2>
+      </div>
+    </div>
+    <div class="row">
+        {% with products=categorized_products.Appetizers_and_Sides %}
+        {% if products %}
+          {% for product in products %}
+            <div class="col-lg-4 col-md-6 mb-4 cardone">
+              <div class="custom-card d-flex align-items-center p-3 rounded shadow">
+                <div class="card-text-section flex-grow-1 pe-3">
+                  <h5 class="fw-bold mb-2 text-black">{{ product.name }}</h5>
+                  <p class="mb-2 text-muted small">{{ product.description }}</p>
+
+                  {% if product.variants.count > 0 %}
+                    {% for variant in product.variants.all %}
+                      <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="small text-dark">{{ variant.name }}</span>
+                        <div class="d-flex align-items-center gap-2">
+                          <span class="fw-bold text-black">£{{ variant.price }}</span>
+                          <button class="btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center add-to-cart"
+                                  data-variant-id="{{ variant.id }}"
+                                  style="width: 26px; height: 26px;">
+                            <i class="bi bi-plus text-white"></i>
+                          </button>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    <div class="text-muted">Not available</div>
+                  {% endif %}
+                </div>
+
+                <div class="card-image-section position-relative">
+                  {% if product.image %}
+                    <img src="{{ product.image.url }}" class="rounded image-fixed-size" alt="{{ product.name }}">
+                  {% else %}
+                    <img src="{% static 'img/default-food.jpg' %}" class="rounded image-fixed-size" alt="No image">
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p class="text-white text-center">No products available under this category.</p>
+        {% endif %}
+      {% endwith %}
+      </div>
+    </div>
+  </div>
+  <!-- =============== menu card one Appetisers & Sides Section End =============== -->
+{% endif %}
+
+{% if categorized_products.Starters_and_Pakoras %}
+<!-- =============== menu card two Starters & Pakoras Section start =============== -->
+<!-- subpart one -->
+  <div id="menu2" class=" menu-card-two-sub-one appetisers-sides-section container-fluid py-5">
+    <div class="container">
+      <div class=" row">
+        <div class="col-lg-12 text-start mb-4 section-one-title-wrapper">
+          <h2 class="section-one-title ">Starters & Pakoras</h2>
+        </div>
+      </div>
+
+      <div class="row"> 
+      {% with products=categorized_products.Starters_and_Pakoras %}
+        {% if products %}
+          {% for product in products %}
+            <div class="col-lg-4 col-md-6 mb-4 cardone">
+              <div class="custom-card d-flex align-items-center p-3 rounded shadow">
+                <div class="card-text-section flex-grow-1 pe-3">
+                  <h5 class="fw-bold mb-2 text-black">{{ product.name }}</h5>
+                  <p class="mb-2 text-muted small">{{ product.description }}</p>
+
+                  {% if product.variants.count > 0 %}
+                    {% for variant in product.variants.all %}
+                      <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="small text-dark">{{ variant.name }}</span>
+                        <div class="d-flex align-items-center gap-2">
+                          <span class="fw-bold text-black">£{{ variant.price }}</span>
+                          <button class="btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center add-to-cart"
+                                  data-variant-id="{{ variant.id }}"
+                                  style="width: 26px; height: 26px;">
+                            <i class="bi bi-plus text-white"></i>
+                          </button>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    <div class="text-muted">Not available</div>
+                  {% endif %}
+                </div>
+
+                <div class="card-image-section position-relative">
+                  {% if product.image %}
+                    <img src="{{ product.image.url }}" class="rounded image-fixed-size" alt="{{ product.name }}">
+                  {% else %}
+                    <img src="{% static 'img/default-food.jpg' %}" class="rounded image-fixed-size" alt="No image">
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p class="text-white text-center">No products available under this category.</p>
+        {% endif %}
+      {% endwith %}
+      </div>
+    </div>
+  </div>
+
+  <!-- sub part two -->
+    <div class=" menu-card-two-sub-two appetisers-sides-section container-fluid py-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12  text-center mb-4 section-one-title-two-wrapper position-relative">
+            <div class="section-one-title-image d-inline-block position-relative">
+              <img src="/static/img/menuTwo/title-two.png" alt="Starters & Pakoras" class="title-img" />
+              <img src="/static/img/menuTwo/title-img.png" alt="Dish" class="dish-icon" />
+            </div>
+          </div>
+        </div>
+        
+              <div class="row"> 
+                {% with products=categorized_products.Starters_and_Pakoras %}
+                  {% if products %}
+                    {% for product in products %}
+                      <div class="col-lg-4 col-md-6 mb-4 cardone">
+                        <div class="custom-card d-flex align-items-center p-3 rounded shadow">
+                          <div class="card-text-section flex-grow-1 pe-3">
+                            <h5 class="fw-bold mb-2 text-black">{{ product.name }}</h5>
+                            <p class="mb-2 text-muted small">{{ product.description }}</p>
+
+                            {% if product.variants.count > 0 %}
+                              {% for variant in product.variants.all %}
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                  <span class="small text-dark">{{ variant.name }}</span>
+                                  <div class="d-flex align-items-center gap-2">
+                                    <span class="fw-bold text-black">£{{ variant.price }}</span>
+                                    <button class="btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center add-to-cart"
+                                            data-variant-id="{{ variant.id }}"
+                                            style="width: 26px; height: 26px;">
+                                      <i class="bi bi-plus text-white"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              {% endfor %}
+                            {% else %}
+                              <div class="text-muted">Not available</div>
+                            {% endif %}
+                          </div>
+
+                          <div class="card-image-section position-relative">
+                            {% if product.image %}
+                              <img src="{{ product.image.url }}" class="rounded image-fixed-size" alt="{{ product.name }}">
+                            {% else %}
+                              <img src="{% static 'img/default-food.jpg' %}" class="rounded image-fixed-size" alt="No image">
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    <p class="text-white text-center">No products available under this category.</p>
+                  {% endif %}
+                {% endwith %}
+              </div>
+      </div>
+    </div>
+<!-- =============== menu card two Starters & Pakoras Section End =============== -->
+{% endif %}
+
+
+{% if categorized_products.Vegitable_Dishes %}
+<!-- =============== menu card three Vegetable Dishes  =============== -->
+
+  <div id="menu3" class=" menu-card-three appetisers-sides-section container-fluid py-5">
+    <div class="container">
+      <div class=" row">
+        <div class="col-lg-12 text-start mb-4 section-one-title-wrapper">
+          <h2 class="section-one-title ">Vegetable Dishes </h2>
+        </div>
+      </div>
+
+      <div class="row">   
+        {% with products=categorized_products.Vegitable_Dishes %}
+            {% if products %}
+              {% for product in products %}
+                <div class="col-lg-4 col-md-6 mb-4 cardone">
+                  <div class="custom-card d-flex align-items-center p-3 rounded shadow">
+                    <div class="card-text-section flex-grow-1 pe-3">
+                      <h5 class="fw-bold mb-2 text-black">{{ product.name }}</h5>
+                      <p class="mb-2 text-muted small">{{ product.description }}</p>
+
+                      {% if product.variants.count > 0 %}
+                        {% for variant in product.variants.all %}
+                          <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="small text-dark">{{ variant.name }}</span>
+                            <div class="d-flex align-items-center gap-2">
+                              <span class="fw-bold text-black">£{{ variant.price }}</span>
+                              <button class="btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center add-to-cart"
+                                      data-variant-id="{{ variant.id }}"
+                                      style="width: 26px; height: 26px;">
+                                <i class="bi bi-plus text-white"></i>
+                              </button>
+                            </div>
+                          </div>
+                        {% endfor %}
+                      {% else %}
+                        <div class="text-muted">Not available</div>
+                      {% endif %}
+                    </div>
+
+                    <div class="card-image-section position-relative">
+                      {% if product.image %}
+                        <img src="{{ product.image.url }}" class="rounded image-fixed-size" alt="{{ product.name }}">
+                      {% else %}
+                        <img src="{% static 'img/default-food.jpg' %}" class="rounded image-fixed-size" alt="No image">
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <p class="text-white text-center">No products available under this category.</p>
+            {% endif %}
+          {% endwith %}
+      </div>
+
+    </div>
+  </div>
+<!-- =============== menu card three Vegetable Dishes End =============== -->
+{% endif %}
+
+{% if categorized_products.Indian_Traditional_Dishes %}
+<!-- =============== menu card four Indian Traditional Dishes  Section  =============== -->
+  <div id="menu4" class=" menu-card-four appetisers-sides-section container-fluid py-5">
+    <div class="container">
+      <div class=" row">
+        <div class="col-lg-12 text-start mb-4 section-one-title-wrapper">
+          <h2 class="section-one-title ">Indian Traditional Dishes </h2>
+        </div>
+      </div>
+      <div class="row "> 
+        {% with products=categorized_products.Indian_Traditional_Dishes %}
+          {% if products %}
+            {% for product in products %}
+              <div class="col-lg-4 col-md-6 mb-4">
+                <div class="container mt-5">
+                  <div class="card mx-auto shadow-lg rounded" style="max-width: 22rem;">
+                    
+                    <!-- Profile Image -->
+                    <div class="mx-auto rounded-circle position-relative"
+                        style="width: 130px; height: 130px; margin-top: -65px; overflow: hidden;">
+                      {% if product.image %}
+                        <img src="{{ product.image.url }}" class="w-100 h-100 object-fit-cover" style="object-position: center;" alt="{{ product.name }}">
+                      {% else %}
+                        <img src="{% static 'img/default-food.jpg' %}" class="w-100 h-100 object-fit-cover" style="object-position: center;" alt="No image">
+                      {% endif %}
+                    </div>
+
+                    <!-- Title and Description -->
+                    <div class="card-body text-center">
+                      <h5 class="card-title">{{ product.name }}</h5>
+                      <p class="card-description small mb-3">{{ product.description }}</p>
+
+                      <!-- Variant List (one or many) -->
+                      {% if product.variants.exists %}
+                        <ul class="list-group list-group-flush">
+                          {% for variant in product.variants.all %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                              <span class="card-list-title">{{ variant.name }}</span>
+                              <div class="d-flex align-items-center gap-2">
+                                <span class="card-list-title">£{{ variant.price }}</span>
+                                <button 
+                                  class="btn btn-sm btn-dark fw-bold rounded-circle d-flex align-items-center justify-content-center add-to-cart"
+                                  style="width: 26px; height: 26px;"
+                                  data-variant-id="{{ variant.id }}">
+                                  <i class="bi bi-plus text-white card-list-icon"></i>
+                                </button>
+                              </div>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      {% else %}
+                        <div class="text-muted">Not available</div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-white text-center">No products found in this category.</p>
+          {% endif %}
+        {% endwith %}
+      </div>
+
+    </div>
+  </div>
+<!-- =============== menu card four Indian Traditional Dishes  Section End =============== -->
+{% endif %}
+
+
+
+
+{% if categorized_products.South_Indian_Dishes %}
+<!-- =============== menu card five South indian dishes start =============== -->
+<!-- subpart one -->
+  <div id="menu5" class=" menu-card-two-sub-one appetisers-sides-section container-fluid py-5">
+    <div class="container">
+      <div class=" row">
+        <div class="col-lg-12 text-start mb-4 section-one-title-wrapper">
+          <h2 class="section-one-title ">South indian dishes</h2>
+        </div>
+      </div>
+
+      <div class="row"> 
+        <!-- custom card -->
+        {% with products=categorized_products.South_Indian_Dishes %}
+          {% if products %}
+            {% for product in products %}
+              <div class="col-lg-4 col-md-6 mb-4 cardone">
+                <div class="custom-card d-flex align-items-center p-3 rounded shadow">
+                  <div class="card-text-section flex-grow-1 pe-3">
+                    <h5 class="fw-bold mb-2 text-black">{{ product.name }}</h5>
+                    <p class="mb-2 text-muted small">{{ product.description }}</p>
+
+                    {% if product.variants.count > 0 %}
+                      {% for variant in product.variants.all %}
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                          <span class="small text-dark">{{ variant.name }}</span>
+                          <div class="d-flex align-items-center gap-2">
+                            <span class="fw-bold text-black">£{{ variant.price }}</span>
+                            <button class="btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center add-to-cart"
+                                    data-variant-id="{{ variant.id }}"
+                                    style="width: 26px; height: 26px;">
+                              <i class="bi bi-plus text-white"></i>
+                            </button>
+                          </div>
+                        </div>
+                      {% endfor %}
+                    {% else %}
+                      <div class="text-muted">Not available</div>
+                    {% endif %}
+                  </div>
+
+                  <div class="card-image-section position-relative">
+                    {% if product.image %}
+                      <img src="{{ product.image.url }}" class="rounded image-fixed-size" alt="{{ product.name }}">
+                    {% else %}
+                      <img src="{% static 'img/default-food.jpg' %}" class="rounded image-fixed-size" alt="No image">
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-white text-center">No products available under this category.</p>
+          {% endif %}
+        {% endwith %}
+        <!-- custom card ends -->
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if categorized_products.Biriyani %}
+<!-- sub part two -->
+    <div class=" menu-card-five-two appetisers-sides-section container-fluid py-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12  text-center mb-4  position-relative">
+            <div class="section-one-title-image d-inline-block position-relative">
+              <img src="/static/img/menuFive/biriyani-img.png" alt="Dish" class="biriyani-one" />
+              <img src="/static/img/menuFive/biriyani-title.png" alt="Starters & Pakoras" class="biriyani-title" />
+              <img src="/static/img/menuFive/biriyani-img.png" alt="Dish" class="biriyani-two" />
+              <div class="biriyani-title-description">
+                <p>A Pot Of Biryani To Feed Your Soul Which Is An Indigenous Recipe From Kerala, Aromatic Rice Flavoured With Exotic Spices Like Saffron, Cardamom, Clove, Cinnamon, Layered With Meat Cooked In Athick Malabari Biryani Masala. </p>
+
+              </div>
+            </div>
+          </div>
+        </div>
+              <div class="row"> 
+                <!-- custom card -->
+                {% with products=categorized_products.Biriyani %}
+                  {% if products %}
+                    {% for product in products %}
+                      <div class="col-lg-4 col-md-6 mb-4 cardone">
+                        <div class="custom-card d-flex align-items-center p-3 rounded shadow">
+                          <div class="card-text-section flex-grow-1 pe-3">
+                            <h5 class="fw-bold mb-2 text-black">{{ product.name }}</h5>
+                            <p class="mb-2 text-muted small">{{ product.description }}</p>
+
+                            {% if product.variants.count > 0 %}
+                              {% for variant in product.variants.all %}
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                  <span class="small text-dark">{{ variant.name }}</span>
+                                  <div class="d-flex align-items-center gap-2">
+                                    <span class="fw-bold text-black">£{{ variant.price }}</span>
+                                    <button class="btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center add-to-cart"
+                                            data-variant-id="{{ variant.id }}"
+                                            style="width: 26px; height: 26px;">
+                                      <i class="bi bi-plus text-white"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              {% endfor %}
+                            {% else %}
+                              <div class="text-muted">Not available</div>
+                            {% endif %}
+                          </div>
+
+                          <div class="card-image-section position-relative">
+                            {% if product.image %}
+                              <img src="{{ product.image.url }}" class="rounded image-fixed-size" alt="{{ product.name }}">
+                            {% else %}
+                              <img src="{% static 'img/default-food.jpg' %}" class="rounded image-fixed-size" alt="No image">
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    <p class="text-white text-center">No products available under this category.</p>
+                  {% endif %}
+                {% endwith %}
+                <!-- custom card ends -->
+              </div>
+      </div>
+    </div>
+<!-- =============== menu card five South indian dishes End =============== -->
+{% endif %}
+
+{% if categorized_products.Awaafi_Combos %}
+<!-- =============== menu card six Awaafi Combos start =============== -->
+  <div id="menu6" class="menu-card-six appetisers-sides-section container-fluid py-5">
+    <div class="container">
+      <div class=" row">
+        <div class="col-lg-12 text-start mb-4 section-one-title-wrapper">
+          <h2 class="section-one-title ">Awaafi Combos</h2>
+        </div>
+      </div>
+      <div class="row "> 
+        <!-- custom card -->
+        {% with products=categorized_products.Awaafi_Combos %}
+          {% if products %}
+            {% for product in products %}
+              <div class="col-lg-4 col-md-6 mb-4">
+                <div class="container mt-5">
+                  <div>
+                    <div class="card mx-auto shadow-lg bg-warning" style="max-width: 22rem; border-radius: 15px;">
+                      
+                      <!-- Main circular image -->
+                      <div class="mx-auto rounded-circle position-relative"
+                          style="width:130px;height:130px;margin-top:-65px;overflow:hidden;">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" class="w-100 h-100 object-fit-cover" style="object-position:center;" alt="{{ product.name }}">
+                        {% else %}
+                        <img src="{% static 'img/default-food.jpg' %}" class="w-100 h-100 object-fit-cover" style="object-position:center;" alt="No image">
+                        {% endif %}
+                      </div>
+
+                      <!-- Row of 3 small rounded dish images (use static or customize) -->
+                      <div class="dish-image-row d-flex justify-content-center align-items-center gap-2 my-3">
+                        <img src="{% static 'img/menuSix/sideDishOne.png' %}" alt="Dish 1" class="rounded-circle dish-img dish-img-left">
+                        <img src="{% static 'img/menuSix/sideDishTwo.png' %}" alt="Dish 2" class="rounded-circle dish-img">
+                        <img src="{% static 'img/menuSix/sideDishOne.png' %}" alt="Dish 3" class="rounded-circle dish-img dish-img-right">
+                      </div>
+
+                      <!-- Card body with variant list -->
+                      <div class="card-body">
+                        <div class="text-center">
+                          <h5 class="fw-bold mb-2 text-black">{{ product.name }}</h5>
+                        </div>
+                        {% if product.variants.exists %}
+                        <ul class="list-group list-group-flush">
+                          {% for variant in product.variants.all %}
+                          <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="fw-semibold">{{ variant.name }}</span>
+                            <div class="d-flex align-items-center gap-2">
+                              <span class="fw-semibold">£{{ variant.price }}</span>
+                              <button
+                                class="btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center add-to-cart"
+                                style="width:26px;height:26px;"
+                                data-variant-id="{{ variant.id }}">
+                                <i class="bi bi-plus text-white"></i>
+                              </button>
+                            </div>
+                          </li>
+                          {% endfor %}
+                        </ul>
+                        {% else %}
+                        <div class="text-muted text-center">No variants available</div>
+                        {% endif %}
+                      </div><!-- /.card-body -->
+
+                    </div><!-- /.card -->
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-white text-center">No products available under this category.</p>
+          {% endif %}
+        {% endwith %}
+        <!-- custom card ends -->
+      </div>
+    </div>
+  </div>
+
+{% endif %}
+
+{% if categorized_products.Arabic_Specials %}
+    <!-- sub part two -->
+    <div class=" menu-card-six-two appetisers-sides-section container-fluid py-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12  text-center mb-4  position-relative">
+            <div class="section-one-title-image d-inline-block position-relative">
+              <img src="/static/img/menuSix/arabic-special-title.png" alt="Starters & Pakoras" class="arabic-title" />
+              <img src="/static/img/menuSix/arabic-dish.png" alt="Dish" class="arabic-dish-img" />
+              <div class="arabic-title-description">
+                <p></p>
+
+              </div>
+            </div>
+          </div>
+        </div>
+              <div class="row"> 
+                <!-- custom card -->
+              {% with products=categorized_products.Arabic_Specials %}
+                      {% if products %}
+                        {% for product in products %}
+                          <div class="col-lg-4 col-md-6 mb-4 cardone">
+                            <div class="custom-card d-flex align-items-center p-3 rounded shadow">
+                              <div class="card-text-section flex-grow-1 pe-3">
+                                <h5 class="fw-bold mb-2 text-black">{{ product.name }}</h5>
+                                <p class="mb-2 text-muted small">{{ product.description }}</p>
+
+                                {% if product.variants.count > 0 %}
+                                  {% for variant in product.variants.all %}
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                      <span class="small text-dark">{{ variant.name }}</span>
+                                      <div class="d-flex align-items-center gap-2">
+                                        <span class="fw-bold text-black">£{{ variant.price }}</span>
+                                        <button class="btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center add-to-cart"
+                                                data-variant-id="{{ variant.id }}"
+                                                style="width: 26px; height: 26px;">
+                                          <i class="bi bi-plus text-white"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  {% endfor %}
+                                {% else %}
+                                  <div class="text-muted">Not available</div>
+                                {% endif %}
+                              </div>
+
+                              <div class="card-image-section position-relative">
+                                {% if product.image %}
+                                  <img src="{{ product.image.url }}" class="rounded image-fixed-size" alt="{{ product.name }}">
+                                {% else %}
+                                  <img src="{% static 'img/default-food.jpg' %}" class="rounded image-fixed-size" alt="No image">
+                                {% endif %}
+                              </div>
+                            </div>
+                          </div>
+                        {% endfor %}
+                      {% else %}
+                        <p class="text-white text-center">No products available under this category.</p>
+                      {% endif %}
+                    {% endwith %}
+                <!-- custom card ends -->
+              </div>
+      </div>
+    </div>
+{% endif %}
+
+{% if categorized_products.Rice_and_Breads %}
+<!-- =============== menu card seven Rice & Breads start =============== -->
+   <div id="menu7" class=" menu-card-two-sub-one appetisers-sides-section container-fluid py-5">
+    <div class="container">
+      <div class=" row">
+        <div class="col-lg-12 text-start mb-4 section-one-title-wrapper">
+          <h2 class="section-one-title ">Rice & Breads</h2>
+        </div>
+      </div>
+
+      <div class="row"> 
+        <!-- custom card -->
+        {% with products=categorized_products.Rice_and_Breads %}
+        {% if products %}
+          {% for product in products %}
+            <div class="col-lg-4 col-md-6 mb-4 cardone">
+              <div class="custom-card d-flex align-items-center p-3 rounded shadow">
+                <div class="card-text-section flex-grow-1 pe-3">
+                  <h5 class="fw-bold mb-2 text-black">{{ product.name }}</h5>
+                  <p class="mb-2 text-muted small">{{ product.description }}</p>
+
+                  {% if product.variants.count > 0 %}
+                    {% for variant in product.variants.all %}
+                      <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="small text-dark">{{ variant.name }}</span>
+                        <div class="d-flex align-items-center gap-2">
+                          <span class="fw-bold text-black">£{{ variant.price }}</span>
+                          <button class="btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center add-to-cart"
+                                  data-variant-id="{{ variant.id }}"
+                                  style="width: 26px; height: 26px;">
+                            <i class="bi bi-plus text-white"></i>
+                          </button>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    <div class="text-muted">Not available</div>
+                  {% endif %}
+                </div>
+
+                <div class="card-image-section position-relative">
+                  {% if product.image %}
+                    <img src="{{ product.image.url }}" class="rounded image-fixed-size" alt="{{ product.name }}">
+                  {% else %}
+                    <img src="{% static 'img/default-food.jpg' %}" class="rounded image-fixed-size" alt="No image">
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p class="text-white text-center">No products available under this category.</p>
+        {% endif %}
+      {% endwith %}
+        <!-- custom card ends -->
+      </div>
+
+    </div>
+  </div>
+<!-- =============== menu card seven Rice & Breads end =============== -->
+{% endif %}
+
+{% if categorized_products.Awaafi_Grills %}
+<!-- =============== menu card eight Awaafi Grills start =============== -->
+   <div id="menu8" class=" menu-card-two-sub-one appetisers-sides-section container-fluid py-5">
+    <div class="container">
+      <div class=" row">
+        <div class="col-lg-12 text-start mb-4 section-one-title-wrapper">
+          <h2 class="section-one-title ">Awaafi Grills</h2>
+        </div>
+      </div>
+
+      <div class="row"> 
+        <!-- custom card -->
+        {% with products=categorized_products.Awaafi_Grills %}
+          {% if products %}
+            {% for product in products %}
+              <div class="col-lg-4 col-md-6 mb-4 cardone">
+                <div class="custom-card d-flex align-items-center p-3 rounded shadow">
+                  <div class="card-text-section flex-grow-1 pe-3">
+                    <h5 class="fw-bold mb-2 text-black">{{ product.name }}</h5>
+                    <p class="mb-2 text-muted small">{{ product.description }}</p>
+
+                    {% if product.variants.count > 0 %}
+                      {% for variant in product.variants.all %}
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                          <span class="small text-dark">{{ variant.name }}</span>
+                          <div class="d-flex align-items-center gap-2">
+                            <span class="fw-bold text-black">£{{ variant.price }}</span>
+                            <button class="btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center add-to-cart"
+                                    data-variant-id="{{ variant.id }}"
+                                    style="width: 26px; height: 26px;">
+                              <i class="bi bi-plus text-white"></i>
+                            </button>
+                          </div>
+                        </div>
+                      {% endfor %}
+                    {% else %}
+                      <div class="text-muted">Not available</div>
+                    {% endif %}
+                  </div>
+
+                  <div class="card-image-section position-relative">
+                    {% if product.image %}
+                      <img src="{{ product.image.url }}" class="rounded image-fixed-size" alt="{{ product.name }}">
+                    {% else %}
+                      <img src="{% static 'img/default-food.jpg' %}" class="rounded image-fixed-size" alt="No image">
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-white text-center">No products available under this category.</p>
+          {% endif %}
+        {% endwith %}
+        <!-- custom card ends -->
+      </div>
+    </div>
+  </div>
+<!-- =============== menu card eight Awaafi Grills end =============== -->
+{% endif %}
+
+{% if categorized_products.Milkshake_and_Lassies %}
+<!-- =============== menu card nine milkshake and lassies start =============== -->
+<div id="menu9" class="menu-card-nine appetisers-sides-section container-fluid py-5">
+  <!-- Top corner images -->
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center mb-4 position-relative">
+        <div class="menu-nine-title-section">
+          <img src="/static/img/menuNine/milkshake-img.png" alt="Dish" class="milkshake-img" />
+          <img src="/static/img/menuNine/milkshake-title.png" alt="Starters & Pakoras" class="milkshake-title" />
+
+          <!-- Decorative corner images -->
+          <img src="/static/img/menuNine/leftImg.png" class="top-left-img" alt="Decor Left">
+          <img src="/static/img/menuNine/rightImg.png" class="top-right-img" alt="Decor Right">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- custom card -->
+      {% with products=categorized_products.Milkshake_and_Lassies %}
+        {% if products %}
+          {% for product in products %}
+            <div class="col-lg-4 col-md-6 mb-4 cardone">
+              <div class="custom-card d-flex align-items-center p-3 rounded shadow">
+                <div class="card-text-section flex-grow-1 pe-3">
+                  <h5 class="fw-bold mb-2 text-black">{{ product.name }}</h5>
+                  <p class="mb-2 text-muted small">{{ product.description }}</p>
+
+                  {% if product.variants.count > 0 %}
+                    {% for variant in product.variants.all %}
+                      <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="small text-dark">{{ variant.name }}</span>
+                        <div class="d-flex align-items-center gap-2">
+                          <span class="fw-bold text-black">£{{ variant.price }}</span>
+                          <button class="btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center add-to-cart"
+                                  data-variant-id="{{ variant.id }}"
+                                  style="width: 26px; height: 26px;">
+                            <i class="bi bi-plus text-white"></i>
+                          </button>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    <div class="text-muted">Not available</div>
+                  {% endif %}
+                </div>
+
+                <div class="card-image-section position-relative">
+                  {% if product.image %}
+                    <img src="{{ product.image.url }}" class="rounded image-fixed-size" alt="{{ product.name }}">
+                  {% else %}
+                    <img src="{% static 'img/default-food.jpg' %}" class="rounded image-fixed-size" alt="No image">
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p class="text-white text-center">No products available under this category.</p>
+        {% endif %}
+      {% endwith %}
+      <!-- custom card ends -->
+    </div>
+  </div>
+</div>
+
+<!-- =============== menu card nine milkshake and lassies end =============== -->
+{% endif %}
+
+{% if categorized_products.Hot_Drinks %}
+<!-- =============== menu card ten hot drinks start =============== -->
+<div id="menu10" class="menu-card-ten appetisers-sides-section container-fluid py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center mb-4 position-relative">
+        <div class="menu-card-ten-title-image">
+          <img src="/static/img/menuTen/hot-cofeee-imgg.png" alt="Dish" class="hot-cofee-img" />
+          <img src="/static/img/menuTen/hot-cofeee-title.png" alt="Starters & Pakoras" class="hot-cofee-title" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      {% with products=categorized_products.Hot_Drinks %}
+        {% if products %}
+          {% for product in products %}
+            <div class="col-lg-4 col-md-6 mb-4 cardone">
+              <div class="custom-card d-flex align-items-center p-3 rounded shadow">
+                <div class="card-text-section flex-grow-1 pe-3">
+                  <h5 class="fw-bold mb-2 text-black">{{ product.name }}</h5>
+                  <p class="mb-2 text-muted small">{{ product.description }}</p>
+
+                  {% if product.variants.count > 0 %}
+                    {% for variant in product.variants.all %}
+                      <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="small text-dark">{{ variant.name }}</span>
+                        <div class="d-flex align-items-center gap-2">
+                          <span class="fw-bold text-black">£{{ variant.price }}</span>
+                          <button class="btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center add-to-cart"
+                                  data-variant-id="{{ variant.id }}"
+                                  style="width: 26px; height: 26px;">
+                            <i class="bi bi-plus text-white"></i>
+                          </button>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    <div class="text-muted">Not available</div>
+                  {% endif %}
+                </div>
+
+                <div class="card-image-section position-relative">
+                  {% if product.image %}
+                    <img src="{{ product.image.url }}" class="rounded image-fixed-size" alt="{{ product.name }}">
+                  {% else %}
+                    <img src="{% static 'img/default-food.jpg' %}" class="rounded image-fixed-size" alt="No image">
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p class="text-white text-center">No products available under this category.</p>
+        {% endif %}
+      {% endwith %}
+    </div>
+  </div>
+</div>
+<!-- =============== menu card ten hot drinks end =============== -->
+{% endif %}
+
+{% if categorized_products.Mocktails %}
+<!-- =============== menu card eleven Awaafi Grills start =============== -->
+   <div id="menu11" class=" menu-card-two-sub-one appetisers-sides-section container-fluid py-5">
+    <div class="container">
+      <div class=" row">
+        <div class="col-lg-12 text-start mb-4 section-one-title-wrapper">
+          <h2 class="section-one-title ">Mocktails</h2>
+        </div>
+      </div>
+
+      <div class="row"> 
+        {% with products=categorized_products.Mocktails %}
+          {% if products %}
+            {% for product in products %}
+              <div class="col-lg-4 col-md-6 mb-4 cardone">
+                <div class="custom-card d-flex align-items-center p-3 rounded shadow">
+                  <div class="card-text-section flex-grow-1 pe-3">
+                    <h5 class="fw-bold mb-2 text-black">{{ product.name }}</h5>
+                    <p class="mb-2 text-muted small">{{ product.description }}</p>
+
+                    {% if product.variants.count > 0 %}
+                      {% for variant in product.variants.all %}
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                          <span class="small text-dark">{{ variant.name }}</span>
+                          <div class="d-flex align-items-center gap-2">
+                            <span class="fw-bold text-black">£{{ variant.price }}</span>
+                            <button class="btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center add-to-cart"
+                                    data-variant-id="{{ variant.id }}"
+                                    style="width: 26px; height: 26px;">
+                              <i class="bi bi-plus text-white"></i>
+                            </button>
+                          </div>
+                        </div>
+                      {% endfor %}
+                    {% else %}
+                      <div class="text-muted">Not available</div>
+                    {% endif %}
+                  </div>
+
+                  <div class="card-image-section position-relative">
+                    {% if product.image %}
+                      <img src="{{ product.image.url }}" class="rounded image-fixed-size" alt="{{ product.name }}">
+                    {% else %}
+                      <img src="{% static 'img/default-food.jpg' %}" class="rounded image-fixed-size" alt="No image">
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-white text-center">No products available under this category.</p>
+          {% endif %}
+        {% endwith %}
+      </div>
+
+    </div>
+  </div>
+<!-- =============== menu card eleven Awaafi Grills end =============== -->
+{% endif %} 
+
+
+
+{% if categorized_products.Drinks %}
+<!-- =============== menu card twelve drinks start =============== -->
+<div id="menu12" class="menu-card-twelve appetisers-sides-section container-fluid py-5">
+  <div class="container position-relative">
+    <div class="row">
+      <div class="col-lg-12 text-start mb-4 menu-twelve-title-wrapper position-relative">
+        <img src="/static/img/menuEleven/cola-left-img.png" alt="Left Decoration"
+             class="menu-twelve-left-decor">
+
+        <h2 class="menu-twelve-title">Drinks</h2>
+      </div>
+    </div>
+    <img src="/static/img/menuEleven/cola-right-img.png" alt="Right Decoration"
+         class="menu-twelve-right-decor">
+    <div class="row">
+      {% with products=categorized_products.Drinks %}
+        {% if products %}
+          {% for product in products %}
+            <div class="col-lg-4 col-md-4 mb-4">
+              <div class="drink-card border rounded shadow p-3 text-center h-100">
+                <!-- Product Image -->
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid mb-3 drink-image" />
+                {% else %}
+                <img src="{% static 'img/default-drink.png' %}" alt="No image" class="img-fluid mb-3 drink-image" />
+                {% endif %}
+                <!-- Product Name -->
+                <h5 class="fw-bold">{{ product.name }}</h5>
+                <!-- Variants -->
+                {% for variant in product.variants.all %}
+                <div class="drink-option d-flex justify-content-between align-items-center pt-2 mt-2">
+                  <span class="drink-title-text">{{ variant.name }}</span>
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="drink-price-text">£{{ variant.price }}</span>
+                    <button class="btn btn-sm btn-dark rounded-circle d-flex justify-content-center align-items-center plus-btn add-to-cart" data-variant-id="{{ variant.id }}">
+                      <i class="bi bi-plus text-white plus-icon"></i>
+                    </button>
+                  </div>
+                </div>
+                {% endfor %}
+
+              </div>
+            </div>
+            {% endfor %}
+        {% else %}
+          <p class="text-white text-center">No products available under this category.</p>
+        {% endif %}
+      {% endwith %}
+    </div>
+  </div>
+</div>
+<!-- =============== menu card twelve drinks end =============== -->
+{% endif %}
+
+{% if categorized_products.Candies %}
+<!-- =============== menu card thirteen Awaafi Grills start =============== -->
+   <div id="menu13" class=" menu-card-two-sub-one appetisers-sides-section container-fluid py-5">
+    <div class="container">
+      <div class=" row">
+        <div class="col-lg-12 text-start mb-4 section-one-title-wrapper">
+          <h2 class="section-one-title ">Candies</h2>
+        </div>
+      </div>
+
+      <div class="row"> 
+        <!-- custom card -->
+          {% with products=categorized_products.Candies %}
+            {% if products %}
+              {% for product in products %}
+                <div class="col-lg-4 col-md-6 mb-4 cardone">
+                  <div class="custom-card d-flex align-items-center p-3 rounded shadow">
+                    <div class="card-text-section flex-grow-1 pe-3">
+                      <h5 class="fw-bold mb-2 text-black">{{ product.name }}</h5>
+                      <p class="mb-2 text-muted small">{{ product.description }}</p>
+
+                      {% if product.variants.count > 0 %}
+                        {% for variant in product.variants.all %}
+                          <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="small text-dark">{{ variant.name }}</span>
+                            <div class="d-flex align-items-center gap-2">
+                              <span class="fw-bold text-black">£{{ variant.price }}</span>
+                              <button class="btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center add-to-cart"
+                                      data-variant-id="{{ variant.id }}"
+                                      style="width: 26px; height: 26px;">
+                                <i class="bi bi-plus text-white"></i>
+                              </button>
+                            </div>
+                          </div>
+                        {% endfor %}
+                      {% else %}
+                        <div class="text-muted">Not available</div>
+                      {% endif %}
+                    </div>
+
+                    <div class="card-image-section position-relative">
+                      {% if product.image %}
+                        <img src="{{ product.image.url }}" class="rounded image-fixed-size" alt="{{ product.name }}">
+                      {% else %}
+                        <img src="{% static 'img/default-food.jpg' %}" class="rounded image-fixed-size" alt="No image">
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <p class="text-white text-center">No products available under this category.</p>
+            {% endif %}
+          {% endwith %}
+        <!-- custom card ends -->
+      </div>
+
+    </div>
+  </div>
+<!-- =============== menu card thirteen Awaafi Grills end =============== -->
+
+{% endif %}
+{% endif %}
+
+  {% endblock content %} {% block scripts %}
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".add-to-cart").forEach((button) => {
+        button.addEventListener("click", () => {
+          const variantId = button.getAttribute("data-variant-id");
+
+          fetch(`/cart/add/${variantId}/`, {
+            method: "GET",
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+            },
+          })
+            .then((response) => {
+              if (response.status === 401) {
+                // User is not authenticated
+                return response.json().then(data => {
+                  showToast(data.error || 'Please login to add items to cart', 'warning');
+                  throw new Error('Authentication required');
+                });
+              }
+              return response.json();
+            })
+            .then((data) => {
+              if (data.success) {
+                showToast(`Added to cart. Quantity: ${data.quantity}`, 'success');
+              } else {
+                showToast(data.error || "Failed to add to cart", 'danger');
+              }
+            })
+            .catch((err) => {
+              if (err.message !== 'Authentication required') {
+                console.error(err);
+                showToast("Something went wrong.", 'danger');
+              }
+            });
+        });
+      });
+    });
+  </script>
+  {% endblock scripts %}
+</div>
+
+<div id="custom-toast-container" aria-live="polite" aria-atomic="true" class="position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>

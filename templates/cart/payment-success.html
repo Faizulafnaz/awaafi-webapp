@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Payment Successful - Awaafi{% endblock %}
+
+{% block css %}
+<link href="{% static 'css/basketStyle.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block hero_content %}
+<div class="container py-5 text-center">
+  <h2 class="text-success">Payment Successful!</h2>
+  <p class="text-white">Thank you for your order. Your payment has been received.</p>
+  <a href="{% url 'home' %}" class="btn btn-primary mt-3">Back to Home</a>
+</div>
+{% endblock %}

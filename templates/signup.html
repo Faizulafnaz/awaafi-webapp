@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load socialaccount %}
+
+
+{% block title %}Signup{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'css/signupStyle.css' %}">{% endblock %}
+
+{% block hero_content %}
+    <!--================== SIGNUP CARD ==================-->
+    <div class="container">
+      <div class="row justify-content-end">
+        <div class="col-md-6 col-lg-5">
+          <div class="p-4 p-md-5 bg-white shadow rounded-4 login-card" style="margin-top:30px;">
+
+            <!-- Card Title -->
+            <div class="text-center">
+              <h3 class="mb-3 fw-bold text-dark">Create Account</h3>
+            </div>
+
+            <!-- Signup Form -->
+            <form class="mt-3" method="POST" action="{% url 'register' %}">
+                {% csrf_token %}
+              <div class="mb-3">
+                <input id="name" name="name" type="text" class="form-control custom-input" placeholder="Name">
+              </div>
+              <div class="mb-3">
+                <input id="email" name="email" type="email" class="form-control custom-input" placeholder="Email">
+              </div>
+              <div class="mb-3 position-relative">
+                <input id="password" name="password" type="password" class="form-control custom-input pe-5" placeholder="Password">
+                <span class="position-absolute top-50 end-0 translate-middle-y me-3 text-dark" style="cursor: pointer;" onclick="togglePasswordVisibility()">
+                    <i class="bi bi-eye-slash" id="toggleIcon"></i>
+                </span>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="form-check mb-0">
+                  <input id="rememberMe" class="form-check-input" type="checkbox">
+                  <label class="form-check-label text-muted small" for="rememberMe">
+                    If you do not wish to receive deals and discount tick this box
+                  </label>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-warning w-100 fw-semibold">
+                <span class="text-white small">SIGN UP</span>
+              </button>
+
+              <div class="text-center my-3 text-muted small">or continue with</div>
+
+                <a href="{% provider_login_url 'google' %}" class="btn btn-outline-dark w-100 d-flex align-items-center justify-content-center gap-2">
+                    <img src="{% static 'img/google-img.png' %}" alt="Google Icon" style="height:20px;width:20px;">
+                    Continue with Google
+                </a>
+
+              <p class="mt-4 text-center text-muted small">
+                Already have an account?
+                <a href="/accounts/login" class="fw-bold text-decoration-none text-black small">Log in</a>
+              </p>
+            </form>
+            <!-- End Signup Form -->
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--================== END SIGNUP CARD ==================-->
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function togglePasswordVisibility() {
+    const input = document.getElementById("password");
+    const icon = document.getElementById("toggleIcon");
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.remove("bi-eye-slash");
+      icon.classList.add("bi-eye");
+    } else {
+      input.type = "password";
+      icon.classList.remove("bi-eye");
+      icon.classList.add("bi-eye-slash");
+    }
+  }
+</script>
+{% endblock scripts %}
+

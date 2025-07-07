@@ -1,0 +1,452 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Basket - Awaafi{% endblock %}
+
+{% block css %}
+<link href="{% static 'css/basketStyle.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block hero_content %}
+<!-- CSRF Token for AJAX requests -->
+{% csrf_token %}
+<!-- MAIN BASKET SECTION -->
+<div class="container my-5" style="padding-bottom: 100px;">
+  <div class="row g-4 justify-content-center">
+    {% if items %}
+      <!-- Left Side: Address and Payment -->
+      <div class="col-lg-8 h-100">
+        <!-- user info -->
+        <div class="basket-section-order text-white p-4 rounded mb-3">
+          <p class="small fw-bold">
+            Logged in <i class="bi bi-check-circle-fill text-success me-1"></i>
+          </p>
+          <p class="small">
+            <span>Name: {{ user.email }}</span><br>
+            <span>Mobile: {% if user.phone %}{{ user.phone }}{% else %}Not provided{% endif %}</span>
+          </p>
+        </div>
+
+        <!-- Delivery Address and Payment (Visible by default) -->
+        <div id="addressDisplaySection">
+          <div class="basket-section-order text-white p-4 rounded mb-3">
+            <p class="small fw-bold mb-2">
+              Delivery Address 
+              <span class="text-warning float-end small cursor-pointer" onclick="showAddressForm()">Create Address</span>
+            </p>
+
+            <!-- Current Address -->
+            <div class="mb-3">
+              <p class="small mb-1">Current Address:</p>
+              <div class="bg-dark p-2 rounded" id="current-address">
+                {% if current_address %}
+                  <p class="small mb-0">
+                    <b>{{ current_address.name }}</b> ({{ current_address.phone }})<br>
+                    {{ current_address.house }}<br>
+                    {{ current_address.street }}, {{ current_address.city }}<br>
+                    PIN: {{ current_address.pin_code }}
+                  </p>
+                  <small>{{ current_address.get_address_type_display }}</small>
+                {% else %}
+                  <p class="small mb-0 text-warning">
+                    <i class="bi bi-exclamation-triangle"></i> No address selected. Please select or create an address to proceed.
+                  </p>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Saved Addresses Dropdown -->
+            <div class="mb-2">
+              <label class="form-label small">Choose from saved addresses</label>
+              <select class="form-select form-select-sm" onchange="useSavedAddress(this.value)">
+                <option value="">Select a saved address</option>
+                {% for address in addresses %}
+                  <option value="{{ address.id }}" {% if address.id == current_address.id %}selected{% endif %}>
+                    {{ address.name }} ({{ address.phone }}) - {{ address.house }}, {{ address.street }}, {{ address.city }} ({{ address.get_address_type_display }})
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <!-- Payment Method -->
+          <div class="basket-section-order text-white p-4 rounded mb-3">
+            <form id="checkout-form">
+              <button id="proceed-to-pay" class="btn btn-success w-100 mt-3 small fw-bold" style="border-radius: 4px;" 
+                      {% if not current_address %}disabled{% endif %}>
+                {% if current_address %}
+                  PROCEED TO PAY
+                {% else %}
+                  SELECT ADDRESS TO PROCEED
+                {% endif %}
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Delivery Address Form (Initially hidden) -->
+        <div id="addressFormSection" class="basket-section-order-form text-white p-4 rounded mb-3" style="display: none;">
+          <p class="small fw-bold">Delivery Address</p>
+
+          <form method="POST" action="{% url 'save_address' %}">
+            {% csrf_token %}
+            <div class="mb-2">
+              <input type="text" name="name" class="form-control-section mb-2" placeholder="Recipient Name" required>
+              <input type="text" name="phone" class="form-control-section mb-2" placeholder="Phone Number" required>
+              <input type="text" name="house" class="form-control-section mb-2" placeholder="House / Flat / Building" required>
+              <input type="text" name="street" class="form-control-section mb-2" placeholder="Street / Locality" required>
+              <input type="text" name="city" class="form-control-section mb-2" placeholder="City" required>
+              <input type="text" name="pin_code" class="form-control-section mb-2" placeholder="PIN Code" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small">Select Address Type</label>
+              <select name="address_type" class="form-control-section">
+                <option value="home">Home</option>
+                <option value="work">Work</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small">Pick Location</label>
+              <input id="pac-input" class="form-control mb-2" type="text" placeholder="Search location">
+              <div id="map" style="height: 250px;"></div>
+              <input type="hidden" name="latitude" id="latitude">
+              <input type="hidden" name="longitude" id="longitude">
+            </div>
+            <div class="d-flex gap-2 mt-3">
+              <button type="submit" class="btn btn-success w-50 small fw-bold" style="border-radius: 4px;">SUBMIT</button>
+              <button type="button" class="btn btn-secondary w-50 small fw-bold" style="border-radius: 4px;" onclick="cancelAddressForm()">CANCEL</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- Right Side: Basket Card -->
+      <div class="col-lg-4">
+        <!-- Basket card div -->
+        <div class="bg-white shadow">
+
+          <!-- Green header box -->
+          <div class="w-100 px-3 py-4 d-flex justify-content-center align-items-center" style="background-color: #28a745; min-height: 80px;">
+            <h5 class="text-white m-0 text-center">My Basket</h5>
+          </div>
+
+          <div class="p-4">
+            {% for item in items %}
+            <!-- Basket Item -->
+            <div class="d-flex justify-content-between align-items-center py-3 border-bottom">
+              <!-- Left Section: Item Name + Description -->
+              <div class="me-3">
+                <p class="mb-1 fw-bold text-black fs-6">{{ item.variant.product.name }}</p>
+                <small class="text-muted">{{ item.variant.name }}</small>
+              </div>
+
+              <!-- Right Section: Counter + Price -->
+              <div class="d-flex align-items-center">
+                <div class="custom-counter d-flex align-items-center justify-content-center">
+                  <div class="btn-wrapper">
+                    <button class="inner-btn" onclick="updateQuantity({{ item.id }}, 'decrease')">-</button>
+                  </div>
+                  <span class="count-value mx-2" id="quantity-{{ item.id }}">{{ item.quantity }}</span>
+                  <div class="btn-wrapper">
+                    <button class="inner-btn" onclick="updateQuantity({{ item.id }}, 'increase')">+</button>
+                  </div>
+                </div>
+                <span class="total-text ms-3 fw-bold">£{{ item.variant.price|floatformat:2 }}</span>
+                <button class="btn btn-sm btn-outline-danger ms-2" onclick="removeItem({{ item.id }})">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+            {% endfor %}
+
+            <!-- No Contact Delivery -->
+            <div class="form-check mt-3 delivery-box">
+              <div class="d-flex justify-content-center align-items-center">
+                <input class="form-check-input me-2" type="checkbox" id="contactlessDelivery">
+                <label class="form-check-label delivery-label" for="contactlessDelivery">
+                  Opt in for No-contact Delivery
+                </label>
+              </div>
+              <p class="delivery-description text-center">
+                Unwell or avoiding contact? Please select no-contact delivery. Partner will safely place the order outside your door (not for COD).
+              </p>
+            </div>
+
+            <!-- Coupon Code -->
+            <div class="input-group mt-3">
+              <input type="text" class="form-control" placeholder="Coupon code" id="couponCode">
+              <button class="btn btn-outline-dark" onclick="applyCoupon()">Apply coupon</button>
+            </div>
+
+            <hr>
+
+            <!-- Totals -->
+            <div>
+              <p class="text-black fw-bold">Bill details</p>
+              <div class="d-flex justify-content-between px-3">
+                <span class="text-black">Item Total</span>
+                <span class="text-black">£{{ cart_total|floatformat:2 }}</span>
+              </div>
+              <div class="d-flex justify-content-between border-bottom py-2 px-3">
+                <span class="text-black">Delivery Fee</span>
+                <span class="text-black">£{{ delivery_fee|floatformat:2 }}</span>
+              </div>
+              <hr>
+              <div class="d-flex justify-content-between fw-bold px-2">
+                <span class="text-black">TO PAY</span>
+                <span class="text-black">£{{ total_with_delivery|floatformat:2 }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <!-- Centered Basket Card Only -->
+      <div class="col-lg-6 col-md-8 col-12">
+        <div class="bg-white shadow">
+          <div class="w-100 px-3 py-4 d-flex justify-content-center align-items-center" style="background-color: #28a745; min-height: 80px;">
+            <h5 class="text-white m-0 text-center">My Basket</h5>
+          </div>
+          <div class="p-4 text-center">
+            <i class="bi bi-basket text-muted" style="font-size: 3rem;"></i>
+            <p class="text-muted mt-2">Your basket is empty</p>
+            <a href="{% url 'menu' %}" class="btn btn-primary">Browse Menu</a>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Payment Form (hidden by default) -->
+<div id="stripe-payment-section" style="display: none;">
+  <form id="payment-form">
+    <div id="card-element"><!-- Stripe Card Element will go here --></div>
+    <button id="submit" class="btn btn-primary mt-3">Pay Now</button>
+    <div id="payment-message" class="mt-2"></div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function showAddressForm() {
+    document.getElementById('addressDisplaySection').style.display = 'none';
+    document.getElementById('addressFormSection').style.display = 'block';
+  }
+
+  function cancelAddressForm() {
+    document.getElementById('addressDisplaySection').style.display = 'block';
+    document.getElementById('addressFormSection').style.display = 'none';
+  }
+
+  function useSavedAddress(addressId) {
+    if (!addressId) return;
+    // For now, reload the page with the selected address as default
+    window.location.href = "?set_default_address=" + addressId;
+  }
+
+  // Function to update button state based on address selection
+  function updateButtonState() {
+    const currentAddress = document.getElementById('current-address');
+    const proceedButton = document.getElementById('proceed-to-pay');
+    const addressText = currentAddress.textContent.trim();
+    
+    if (!addressText || addressText.includes('No address selected')) {
+      proceedButton.disabled = true;
+      proceedButton.textContent = 'SELECT ADDRESS TO PROCEED';
+      proceedButton.classList.remove('btn-success');
+      proceedButton.classList.add('btn-secondary');
+    } else {
+      proceedButton.disabled = false;
+      proceedButton.textContent = 'PROCEED TO PAY';
+      proceedButton.classList.remove('btn-secondary');
+      proceedButton.classList.add('btn-success');
+    }
+  }
+
+  // Update button state on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    updateButtonState();
+  });
+
+  function updateQuantity(itemId, action) {
+    fetch(`/cart/update/${itemId}/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+      },
+      body: JSON.stringify({
+        action: action
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        if (data.quantity === 0) {
+          // Item was removed, reload page
+          location.reload();
+        } else {
+          // Update quantity display
+          document.getElementById(`quantity-${itemId}`).textContent = data.quantity;
+          // Reload page to update totals
+          location.reload();
+        }
+      } else {
+        showToast('Failed to update quantity', 'danger');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      showToast('Something went wrong', 'danger');
+    });
+  }
+
+  let itemToRemove = null;
+
+  function removeItem(itemId) {
+    itemToRemove = itemId;
+    const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+    modal.show();
+  }
+  
+  document.addEventListener('DOMContentLoaded', function () {
+    const yesBtn = document.getElementById('confirmYesBtn');
+    if (yesBtn) {
+      yesBtn.addEventListener('click', function () {
+        if (itemToRemove) {
+          window.location.href = `/cart/remove/${itemToRemove}/`;
+          itemToRemove = null;
+        }
+        // Hide the modal after action
+        const modal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+        if (modal) modal.hide();
+      });
+    }
+  });
+
+  function applyCoupon() {
+    const couponCode = document.getElementById('couponCode').value;
+    if (couponCode.trim() === '') {
+      showToast('Please enter a coupon code', 'warning');
+      return;
+    }
+    showToast('Coupon functionality will be implemented soon!', 'info');
+  }
+
+  // Toast function
+  function showToast(message, type) {
+    const toastContainer = document.getElementById('custom-toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast align-items-center text-bg-${type} border-0 mb-2 show`;
+    toast.setAttribute('role', 'alert');
+    toast.innerHTML = `<div class="d-flex"><div class="toast-body">${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>`;
+    toastContainer.appendChild(toast);
+    setTimeout(() => toast.remove(), 4000);
+  }
+
+  document.getElementById('checkout-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Check if user has selected an address
+    const currentAddress = document.getElementById('current-address');
+    const addressText = currentAddress.textContent.trim();
+    
+    if (!addressText || addressText.includes('No address selected')) {
+      showToast('Please select a delivery address before proceeding to payment.', 'warning');
+      return;
+    }
+    
+    // Check if cart has items
+    const cartItems = document.querySelectorAll('.custom-counter');
+    if (cartItems.length === 0) {
+      showToast('Your cart is empty. Please add items before proceeding to payment.', 'warning');
+      return;
+    }
+    
+    const amount = '{{ total_with_delivery }}';
+    const response = await fetch('{% url "create_checkout_session" %}', {
+      method: 'POST',
+      headers: {'X-CSRFToken': '{{ csrf_token }}'},
+      body: new URLSearchParams({amount: amount})
+    });
+    const data = await response.json();
+    if (data.url) {
+      window.location.href = data.url; // Redirect to Stripe Checkout
+    } else {
+      showToast(data.error || 'Payment error', 'danger');
+    }
+  });
+</script>
+
+<!-- Toast Container for JS -->
+<div id="custom-toast-container" aria-live="polite" aria-atomic="true" class="position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>
+
+<!-- Django Messages as Toasts -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    {% if messages %}
+      {% for message in messages %}
+        showToast(`{{ message|escapejs }}`, '{{ message.tags|default:"info" }}');
+      {% endfor %}
+    {% endif %}
+  });
+</script>
+
+<!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap" async defer></script>
+
+<script>
+  let map;
+  let marker;
+
+  function initMap() {
+    const defaultLocation = { lat: 55.9533, lng: -3.1883 }; // Edinburgh coordinates
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: defaultLocation,
+      zoom: 15,
+    });
+
+    marker = new google.maps.Marker({
+      position: defaultLocation,
+      map: map,
+      draggable: true
+    });
+
+    const input = document.getElementById("pac-input");
+    const autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.bindTo("bounds", map);
+
+    autocomplete.addListener("place_changed", function () {
+      const place = autocomplete.getPlace();
+      if (!place.geometry) return;
+
+      if (place.geometry.viewport) {
+        map.fitBounds(place.geometry.viewport);
+      } else {
+        map.setCenter(place.geometry.location);
+        map.setZoom(17);
+      }
+
+      marker.setPosition(place.geometry.location);
+      
+      // Update hidden inputs
+      document.getElementById('latitude').value = place.geometry.location.lat();
+      document.getElementById('longitude').value = place.geometry.location.lng();
+    });
+
+    // Update coordinates when marker is dragged
+    google.maps.event.addListener(marker, 'dragend', function () {
+      const position = marker.getPosition();
+      document.getElementById('latitude').value = position.lat();
+      document.getElementById('longitude').value = position.lng();
+    });
+  }
+</script>
+
+<script src="https://js.stripe.com/v3/"></script>
+
+{% endblock %} 
