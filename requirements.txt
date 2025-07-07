@@ -1,5 +1,5 @@
 Django==5.2.3
-django-allauth==0.65.9
+django-allauth==65.9.0
 django-simple-history==3.10.1
 django-unfold==0.62.0
 django-jet==1.0.8
