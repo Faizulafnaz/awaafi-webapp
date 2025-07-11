@@ -6,7 +6,7 @@ import os
 import dj_database_url
 from decouple import config
 from .settings import *
-
+    
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
 
@@ -30,6 +30,10 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Add whitenoise middleware for static files
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+
+DATABASES = {
+    'default': dj_database_url.config(default=config('DATABASE_URL'))
+}
 
 # Enable whitenoise compression and caching
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
